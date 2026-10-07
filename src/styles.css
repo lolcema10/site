@@ -1,0 +1,252 @@
+:root {
+  color-scheme: light;
+  --paper: #f3ecdf;
+  --card: #fffaf3;
+  --ink: #2d241c;
+  --muted: #6d5c4c;
+  --line: #e4d3bf;
+  --brown: #6a4328;
+  --brown-dark: #4e301c;
+  --focus: #8b5a2b;
+  font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 22px 0 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.brand img {
+  border-radius: 10px;
+}
+
+.top-link {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+main {
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding-bottom: 48px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 28px;
+  align-items: center;
+  padding: 28px 0 12px;
+}
+
+.hero-icon {
+  width: 160px;
+  height: 160px;
+  border-radius: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.05;
+}
+
+.lead {
+  max-width: 38rem;
+  margin: 14px 0 0;
+  font-size: 1.12rem;
+}
+
+.download-panel,
+.block {
+  margin-top: 36px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 1.45rem;
+}
+
+.downloads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.download {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 76px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: var(--brown);
+  color: #fffaf3;
+  text-decoration: none;
+}
+
+.download:hover {
+  background: var(--brown-dark);
+}
+
+.download-os {
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.download-meta {
+  color: #f0dcc8;
+  font-size: 0.92rem;
+}
+
+.features {
+  margin: 0;
+}
+
+.features div {
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+
+.features dt {
+  font-weight: 700;
+}
+
+.features dd {
+  margin: 0;
+  color: var(--muted);
+}
+
+.games {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.games li {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+}
+
+.install {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.install article {
+  padding: 18px 18px 8px;
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.install h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.install ol {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.install li {
+  margin: 0 0 10px;
+}
+
+.path {
+  font-family: "SF Mono", ui-monospace, "Cascadia Mono", monospace;
+  font-size: 0.92em;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 18px 0 32px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+}
+
+footer p {
+  margin: 0;
+}
+
+footer a {
+  color: var(--brown);
+}
+
+a:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .hero,
+  .downloads,
+  .install,
+  .features div {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-icon {
+    width: 112px;
+    height: 112px;
+  }
+
+  footer {
+    flex-direction: column;
+  }
+}
