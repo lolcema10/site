@@ -1,17 +1,22 @@
+import { useState } from "react";
+
 const base = import.meta.env.BASE_URL;
 
-const downloads = [
+// Первая запись выбирается при открытии страницы. Новую версию добавляйте сверху.
+const versions = [
   {
-    os: "macOS",
-    file: "works-macos.zip",
-    size: "45 МБ",
-    detail: "works.app",
+    id: "1.1",
+    label: "1.1",
+    date: "8 октября 2026",
+    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
+    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
   },
   {
-    os: "Windows",
-    file: "works-windows.zip",
-    size: "58 МБ",
-    detail: "works.exe",
+    id: "1.0",
+    label: "1.0",
+    date: "7 октября 2026",
+    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
+    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
   },
 ];
 
@@ -41,11 +46,17 @@ const games = [
   "Арканоид",
 ];
 
-function archiveHref(file) {
-  return `${base}downloads/${file}`;
+function archiveHref(version, file) {
+  return `${base}downloads/${version}/${file}`;
 }
 
 export default function App() {
+  const [versionId, setVersionId] = useState(versions[0].id);
+  const version = versions.find((item) => item.id === versionId) ?? versions[0];
+  const downloads = [
+    { os: "macOS", ...version.macos },
+    { os: "Windows", ...version.windows },
+  ];
   return (
     <>
       <header className="top">
@@ -68,7 +79,7 @@ export default function App() {
             height="160"
           />
           <div>
-            <p className="eyebrow">Версия 1.0</p>
+            <p className="eyebrow">Версия {version.label}</p>
             <h1>Моё приложение</h1>
             <p className="lead">
               Настольная программа для файлов и обычных дел: редакторы, заметки,
@@ -80,12 +91,29 @@ export default function App() {
 
         <section id="download" className="download-panel" aria-labelledby="download-title">
           <h2 id="download-title">Скачать</h2>
+          <fieldset className="versions">
+            <legend>Версия</legend>
+            {versions.map((item, index) => (
+              <label key={item.id} className="version">
+                <input
+                  type="radio"
+                  name="version"
+                  value={item.id}
+                  checked={item.id === version.id}
+                  onChange={() => setVersionId(item.id)}
+                />
+                <span>{item.label}</span>
+                {index === 0 ? <small>новее</small> : null}
+              </label>
+            ))}
+          </fieldset>
+          <p className="version-date">Сборка от {version.date}</p>
           <div className="downloads">
             {downloads.map((item) => (
               <a
                 key={item.os}
                 className="download"
-                href={archiveHref(item.file)}
+                href={archiveHref(version.id, item.file)}
               >
                 <span className="download-os">Скачать для {item.os}</span>
                 <span className="download-meta">
@@ -151,7 +179,7 @@ export default function App() {
       </main>
 
       <footer>
-        <p>works 1.0</p>
+        <p>works {version.label}</p>
         <a href="https://github.com/lolcema10/site">github.com/lolcema10/site</a>
       </footer>
     </>

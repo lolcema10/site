@@ -18,17 +18,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Publish v1.0
+      - name: Publish v1.1
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.0
-          name: works 1.0
+          tag_name: v1.1
+          name: works 1.1
           body: |
-            Сборки приложения works со встроенной средой выполнения.
+            Сборки приложения works 1.1 со встроенной средой выполнения.
 
             - macOS: распакуйте архив и откройте works.app
             - Windows: распакуйте архив и запустите works.exe рядом с каталогом runtime
+
+            Версия 1.0 остаётся на странице сайта.
           files: |
-            public/downloads/works-macos.zip
-            public/downloads/works-windows.zip
+            public/downloads/1.1/works-macos.zip
+            public/downloads/1.1/works-windows.zip
           fail_on_unmatched_files: true

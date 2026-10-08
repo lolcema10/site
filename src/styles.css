@@ -109,6 +109,65 @@ h2 {
   font-size: 1.45rem;
 }
 
+.versions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.versions legend {
+  margin-right: 4px;
+  padding: 0;
+  font-weight: 700;
+}
+
+.version {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  cursor: pointer;
+}
+
+.version input {
+  position: absolute;
+  opacity: 0;
+}
+
+.version:has(input:checked) {
+  border-color: var(--brown);
+  background: var(--brown);
+  color: #fffaf3;
+}
+
+.version:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.version small {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.version:has(input:checked) small {
+  color: #f0dcc8;
+}
+
+.version-date {
+  margin: 10px 0 14px;
+  color: var(--muted);
+}
+
 .downloads {
   display: grid;
   grid-template-columns: 1fr 1fr;
