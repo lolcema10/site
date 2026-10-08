@@ -1,6 +1,35 @@
 // Первая запись выбирается при открытии страницы. Новую версию добавляйте сверху.
 export const versions = [
   {
+    id: "1.4",
+    label: "1.4",
+    date: { ru: "8 октября 2026", en: "8 October 2026" },
+    added: {
+      ru: [
+        "Ход назад в мини-играх.",
+        "Уровни судоку: лёгкий, средний и сложный.",
+        "Подсказка в косынке.",
+        "Счёт побед в шашках, реверси и косынке.",
+        "В шахматах новые фигуры и предупреждение «Шах».",
+        "Будильник можно отложить на 5 минут.",
+        "В расписании у дела есть время и повтор: один раз, каждый день или выбранные дни.",
+        "В настройках включается сигнал для напоминаний, будильника и таймера.",
+      ],
+      en: [
+        "Undo in the mini-games.",
+        "Sudoku levels: easy, medium, and hard.",
+        "A hint in solitaire.",
+        "A win count in checkers, reversi, and solitaire.",
+        "New chess pieces, and a check warning.",
+        "The alarm can be snoozed for 5 minutes.",
+        "A schedule task can have a time and a repeat: once, every day, or chosen days.",
+        "Settings can turn the chime on for reminders, the alarm, and the timer.",
+      ],
+    },
+    macos: { file: "works-macos.zip", size: { ru: "45 МБ", en: "45 MB" }, detail: "works.app" },
+    windows: { file: "works-windows.zip", size: { ru: "58 МБ", en: "58 MB" }, detail: "works.exe" },
+  },
+  {
     id: "1.3",
     label: "1.3",
     date: { ru: "8 октября 2026", en: "8 October 2026" },
@@ -80,13 +109,13 @@ export const shots = [
     },
   },
   {
-    src: "shots/editor.png",
-    width: 980,
-    height: 720,
-    caption: { ru: "Редактор фото", en: "Photo editor" },
+    src: "shots/mines.png",
+    width: 1080,
+    height: 740,
+    caption: { ru: "Сапёр", en: "Minesweeper" },
     alt: {
-      ru: "Окно редактора фото с открытой картинкой и ползунками света",
-      en: "The photo editor window with a picture open and the light sliders",
+      ru: "Окно мини-игр с полем сапёра",
+      en: "The mini-games window with a minesweeper board",
     },
   },
   {
@@ -114,7 +143,7 @@ const features = {
     ["Калькулятор", "Вычисления и перевод температуры, длины и веса."],
     ["Таймер", "Обратный отсчёт, секундомер и будильник."],
     ["Часы и расписание", "Дата, время и напоминания."],
-    ["Настройки", "Язык, тема и своя картинка на фон."],
+    ["Настройки", "Язык, тема, сигнал и своя картинка на фон."],
   ],
   en: [
     ["Files", "Folders, search, and pinning for photos, video, and audio."],
@@ -128,7 +157,7 @@ const features = {
     ["Calculator", "Math, plus temperature, length, and weight conversion."],
     ["Timer", "A countdown, a stopwatch, and an alarm."],
     ["Clock and schedule", "The date, the time, and reminders."],
-    ["Settings", "Language, theme, and a custom wallpaper."],
+    ["Settings", "Language, theme, chime, and a custom wallpaper."],
   ],
 };
 

@@ -15,6 +15,7 @@ npm run dev
 
 Архивы лежат по версиям в `public/downloads`:
 
+- `1.4/works-macos.zip` и `1.4/works-windows.zip`
 - `1.3/works-macos.zip` и `1.3/works-windows.zip`
 - `1.2/works-macos.zip` и `1.2/works-windows.zip`
 - `1.1/works-macos.zip` и `1.1/works-windows.zip`
