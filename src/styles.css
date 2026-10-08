@@ -48,6 +48,37 @@ a {
   border-radius: 10px;
 }
 
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.lang {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+}
+
+.lang button {
+  min-width: 44px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lang button[aria-pressed="true"] {
+  background: var(--brown);
+  color: #fffaf3;
+}
+
 .top-link {
   text-decoration: none;
   font-weight: 600;
@@ -263,6 +294,60 @@ h2 {
   background: var(--card);
 }
 
+.shots {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.shots figure {
+  margin: 0;
+}
+
+.shots img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.shots figcaption {
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.requirements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.requirements article,
+.note {
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.requirements h3 {
+  margin: 0 0 8px;
+  font-size: 1.15rem;
+}
+
+.requirements p {
+  margin: 0;
+}
+
+.requirements p + p {
+  margin-top: 8px;
+}
+
+.note {
+  margin: 12px 0 0;
+}
+
 .install {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -313,15 +398,22 @@ footer a {
   color: var(--brown);
 }
 
-a:focus-visible {
+a:focus-visible,
+button:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
+}
+
+.lang button:focus-visible {
+  outline-offset: -3px;
 }
 
 @media (max-width: 720px) {
   .hero,
   .downloads,
   .install,
+  .shots,
+  .requirements,
   .features div {
     grid-template-columns: 1fr;
   }

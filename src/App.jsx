@@ -1,111 +1,46 @@
 import { useEffect, useState } from "react";
+import { downloadPhrase, shots, ui, versions } from "./copy.js";
 
 const base = import.meta.env.BASE_URL;
-
-// Первая запись выбирается при открытии страницы. Новую версию добавляйте сверху.
-const versions = [
-  {
-    id: "1.3",
-    label: "1.3",
-    date: "8 октября 2026",
-    added: [
-      "Будильник вместе с таймером и секундомером.",
-      "Мини-игры «Шахматы» и «Морской бой».",
-      "Счёт партий и побед в мини-играх.",
-      "Перевод температуры, длины и веса в калькуляторе.",
-      "Закрепление файлов.",
-      "Галочки в заметках.",
-      "Снимок экрана и пипетка в редакторе фото.",
-    ],
-    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
-    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
-  },
-  {
-    id: "1.2",
-    label: "1.2",
-    date: "8 октября 2026",
-    added: [
-      "Таймер и секундомер.",
-      "Мини-игры «Судоку» и «Шашки».",
-      "Закрепление заметок.",
-      "Метроном в пианино.",
-      "Своя картинка на фон в настройках.",
-      "Отмена последнего шага в редакторах видео и звука.",
-    ],
-    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
-    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
-  },
-  {
-    id: "1.1",
-    label: "1.1",
-    date: "8 октября 2026",
-    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
-    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
-  },
-  {
-    id: "1.0",
-    label: "1.0",
-    date: "7 октября 2026",
-    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
-    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
-  },
-];
-
-const features = [
-  ["Файлы", "Папки, поиск и закрепление фото, видео и звука."],
-  ["Редактор фото", "Правка фотографий, снимок экрана и пипетка."],
-  ["Редактор видео", "Ролики mp4, mov и m4v."],
-  ["Редактор звука", "Правка звуковых файлов."],
-  ["Пианино", "Клавиши: пианино или гитара, и метроном."],
-  ["Конвертер", "Фото, звук и видео в другой формат."],
-  ["Заметки", "Короткие записи, закрепление и галочки."],
-  ["Диктофон", "Голосовые заметки."],
-  ["Калькулятор", "Вычисления и перевод температуры, длины и веса."],
-  ["Таймер", "Обратный отсчёт, секундомер и будильник."],
-  ["Часы и расписание", "Дата, время и напоминания."],
-  ["Настройки", "Язык, тема и своя картинка на фон."],
-];
-
-const games = [
-  "2048",
-  "Крестики-нолики",
-  "Змейка",
-  "Дурак",
-  "Косынка",
-  "Сапёр",
-  "Тетрис",
-  "Реверси",
-  "Арканоид",
-  "Судоку",
-  "Шашки",
-  "Шахматы",
-  "Морской бой",
-];
-
 const releaseApi = "https://api.github.com/repos/lolcema10/site/releases";
+const langKey = "works-site-lang";
 
 function archiveHref(version, file) {
   return `https://github.com/lolcema10/site/releases/download/v${version}/${file}`;
 }
 
-function downloadPhrase(count) {
-  const n = Math.abs(count) % 100;
-  const last = n % 10;
-  if (n > 10 && n < 20) return `${count} скачиваний`;
-  if (last === 1) return `${count} скачивание`;
-  if (last >= 2 && last <= 4) return `${count} скачивания`;
-  return `${count} скачиваний`;
+function storedLang() {
+  try {
+    return localStorage.getItem(langKey) === "en" ? "en" : "ru";
+  } catch {
+    return "ru";
+  }
 }
 
 export default function App() {
+  const [lang, setLang] = useState(storedLang);
   const [versionId, setVersionId] = useState(versions[0].id);
   const [counts, setCounts] = useState(null);
   const [countsError, setCountsError] = useState(false);
+  const text = ui[lang];
   const version = versions.find((item) => item.id === versionId) ?? versions[0];
+  const added = version.added?.[lang];
   const downloads = [
     { os: "macOS", ...version.macos },
     { os: "Windows", ...version.windows },
   ];
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.title = text.title;
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute("content", text.description);
+    try {
+      localStorage.setItem(langKey, lang);
+    } catch {
+      // Private mode can block storage. The choice still applies for this visit.
+    }
+  }, [lang, text]);
 
   useEffect(() => {
     let cancelled = false;
@@ -143,6 +78,7 @@ export default function App() {
   const total = knownCounts.every((count) => typeof count === "number")
     ? knownCounts.reduce((sum, count) => sum + count, 0)
     : null;
+
   return (
     <>
       <header className="top">
@@ -150,35 +86,37 @@ export default function App() {
           <img src={`${base}icon.png`} alt="" width="44" height="44" />
           <span>works</span>
         </a>
-        <a className="top-link" href="#download">
-          Скачать
-        </a>
+        <div className="top-actions">
+          <div className="lang" role="group" aria-label={text.languageLabel}>
+            <button type="button" aria-pressed={lang === "ru"} onClick={() => setLang("ru")}>
+              RU
+            </button>
+            <button type="button" aria-pressed={lang === "en"} onClick={() => setLang("en")}>
+              EN
+            </button>
+          </div>
+          <a className="top-link" href="#download">
+            {text.downloadNav}
+          </a>
+        </div>
       </header>
 
       <main id="start">
         <section className="hero">
-          <img
-            className="hero-icon"
-            src={`${base}icon.png`}
-            alt=""
-            width="160"
-            height="160"
-          />
+          <img className="hero-icon" src={`${base}icon.png`} alt="" width="160" height="160" />
           <div>
-            <p className="eyebrow">Версия {version.label}</p>
-            <h1>Моё приложение</h1>
-            <p className="lead">
-              Настольная программа для файлов и обычных дел: редакторы, заметки,
-              диктофон, калькулятор и несколько игр. Среда выполнения уже внутри
-              архива, отдельно ставить Java не нужно.
+            <p className="eyebrow">
+              {text.versionEyebrow} {version.label}
             </p>
+            <h1>{text.heading}</h1>
+            <p className="lead">{text.lead}</p>
           </div>
         </section>
 
         <section id="download" className="download-panel" aria-labelledby="download-title">
-          <h2 id="download-title">Скачать</h2>
+          <h2 id="download-title">{text.downloadTitle}</h2>
           <fieldset className="versions">
-            <legend>Версия</legend>
+            <legend>{text.versionLegend}</legend>
             {versions.map((item, index) => (
               <label key={item.id} className="version">
                 <input
@@ -189,41 +127,39 @@ export default function App() {
                   onChange={() => setVersionId(item.id)}
                 />
                 <span>{item.label}</span>
-                {index === 0 ? <small>новее</small> : null}
+                {index === 0 ? <small>{text.latest}</small> : null}
               </label>
             ))}
           </fieldset>
-          <p className="version-date">Сборка от {version.date}</p>
-          {version.added ? (
+          <p className="version-date">
+            {text.builtOn} {version.date[lang]}
+          </p>
+          {added ? (
             <div className="changelog">
-              <h3>Что добавлено в {version.label}</h3>
+              <h3>
+                {text.addedIn} {version.label}
+              </h3>
               <ul>
-                {version.added.map((item) => (
+                {added.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </div>
           ) : null}
           <p className="download-count">
-            {countsError
-              ? "Счётчик сейчас недоступен"
-              : total === null
-                ? "Считаем скачивания…"
-                : `Скачиваний этой версии: ${total}`}
+            {countsError ? text.countError : total === null ? text.countLoading : text.countTotal(total)}
           </p>
           <div className="downloads">
             {downloads.map((item) => {
               const count = fileCount(item.file);
               return (
-                <a
-                  key={item.os}
-                  className="download"
-                  href={archiveHref(version.id, item.file)}
-                >
-                  <span className="download-os">Скачать для {item.os}</span>
+                <a key={item.os} className="download" href={archiveHref(version.id, item.file)}>
+                  <span className="download-os">
+                    {text.downloadFor} {item.os}
+                  </span>
                   <span className="download-meta">
-                    {item.file} · {item.size} · {item.detail}
-                    {typeof count === "number" ? ` · ${downloadPhrase(count)}` : ""}
+                    {item.file} · {item.size[lang]} · {item.detail}
+                    {typeof count === "number" ? ` · ${downloadPhrase(count, lang)}` : ""}
                   </span>
                 </a>
               );
@@ -231,54 +167,79 @@ export default function App() {
           </div>
         </section>
 
+        <section className="block" aria-labelledby="shots-title">
+          <h2 id="shots-title">{text.shotsTitle}</h2>
+          <div className="shots">
+            {shots.map((shot) => (
+              <figure key={shot.src}>
+                <img
+                  src={`${base}${shot.src}`}
+                  width={shot.width}
+                  height={shot.height}
+                  alt={shot.alt[lang]}
+                />
+                <figcaption>{shot.caption[lang]}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
         <section className="block" aria-labelledby="inside-title">
-          <h2 id="inside-title">Что внутри</h2>
+          <h2 id="inside-title">{text.insideTitle}</h2>
           <dl className="features">
-            {features.map(([name, text]) => (
+            {text.features.map(([name, line]) => (
               <div key={name}>
                 <dt>{name}</dt>
-                <dd>{text}</dd>
+                <dd>{line}</dd>
               </div>
             ))}
           </dl>
         </section>
 
         <section className="block" aria-labelledby="games-title">
-          <h2 id="games-title">Мини-игры</h2>
+          <h2 id="games-title">{text.gamesTitle}</h2>
           <ul className="games">
-            {games.map((game) => (
+            {text.games.map((game) => (
               <li key={game}>{game}</li>
             ))}
           </ul>
         </section>
 
+        <section className="block" aria-labelledby="requirements-title">
+          <h2 id="requirements-title">{text.requirementsTitle}</h2>
+          <div className="requirements">
+            <article>
+              <h3>macOS</h3>
+              <p>{text.macRequirement}</p>
+              <p>{text.macSize}</p>
+            </article>
+            <article>
+              <h3>Windows</h3>
+              <p>{text.winRequirement}</p>
+              <p>{text.winSize}</p>
+            </article>
+          </div>
+          <p className="note">{text.runtimeNote}</p>
+          <p className="note">{text.updateNote}</p>
+        </section>
+
         <section className="block" aria-labelledby="install-title">
-          <h2 id="install-title">Как запустить</h2>
+          <h2 id="install-title">{text.installTitle}</h2>
           <div className="install">
             <article>
               <h3>macOS</h3>
               <ol>
-                <li>Скачайте архив и распакуйте его.</li>
-                <li>
-                  Перенесите <span className="path">works.app</span> в папку
-                  «Программы».
-                </li>
-                <li>
-                  При первом запуске щёлкните по приложению правой кнопкой и
-                  выберите «Открыть». macOS просит подтверждение, потому что
-                  сборка не подписана Apple.
-                </li>
+                {text.macSteps.map((step) => (
+                  <li key={step}>{withPaths(step)}</li>
+                ))}
               </ol>
             </article>
             <article>
               <h3>Windows</h3>
               <ol>
-                <li>Скачайте архив и распакуйте его в отдельную папку.</li>
-                <li>
-                  Запустите <span className="path">works.exe</span>. Каталог{" "}
-                  <span className="path">runtime</span> должен остаться рядом с
-                  ним.
-                </li>
+                {text.winSteps.map((step) => (
+                  <li key={step}>{withPaths(step)}</li>
+                ))}
               </ol>
             </article>
           </div>
@@ -290,5 +251,18 @@ export default function App() {
         <a href="https://github.com/lolcema10/site">github.com/lolcema10/site</a>
       </footer>
     </>
+  );
+}
+
+function withPaths(step) {
+  const parts = step.split(/(works\.app|works\.exe|runtime)/);
+  return parts.map((part, index) =>
+    part === "works.app" || part === "works.exe" || part === "runtime" ? (
+      <span key={`${part}-${index}`} className="path">
+        {part}
+      </span>
+    ) : (
+      part
+    ),
   );
 }
