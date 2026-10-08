@@ -164,8 +164,13 @@ h2 {
 }
 
 .version-date {
-  margin: 10px 0 14px;
+  margin: 10px 0 4px;
   color: var(--muted);
+}
+
+.download-count {
+  margin: 0 0 14px;
+  font-weight: 700;
 }
 
 .downloads {

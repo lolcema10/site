@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const base = import.meta.env.BASE_URL;
 
@@ -46,17 +46,66 @@ const games = [
   "Арканоид",
 ];
 
+const releaseApi = "https://api.github.com/repos/lolcema10/site/releases";
+
 function archiveHref(version, file) {
-  return `${base}downloads/${version}/${file}`;
+  return `https://github.com/lolcema10/site/releases/download/v${version}/${file}`;
+}
+
+function downloadPhrase(count) {
+  const n = Math.abs(count) % 100;
+  const last = n % 10;
+  if (n > 10 && n < 20) return `${count} скачиваний`;
+  if (last === 1) return `${count} скачивание`;
+  if (last >= 2 && last <= 4) return `${count} скачивания`;
+  return `${count} скачиваний`;
 }
 
 export default function App() {
   const [versionId, setVersionId] = useState(versions[0].id);
+  const [counts, setCounts] = useState(null);
+  const [countsError, setCountsError] = useState(false);
   const version = versions.find((item) => item.id === versionId) ?? versions[0];
   const downloads = [
     { os: "macOS", ...version.macos },
     { os: "Windows", ...version.windows },
   ];
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(releaseApi)
+      .then((response) => {
+        if (!response.ok) throw new Error(String(response.status));
+        return response.json();
+      })
+      .then((releases) => {
+        if (cancelled) return;
+        const next = {};
+        for (const release of releases) {
+          const id = String(release.tag_name || "").replace(/^v/, "");
+          next[id] = {};
+          for (const asset of release.assets || []) {
+            next[id][asset.name] = asset.download_count;
+          }
+        }
+        setCounts(next);
+      })
+      .catch(() => {
+        if (!cancelled) setCountsError(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function fileCount(file) {
+    return counts?.[version.id]?.[file];
+  }
+
+  const knownCounts = downloads.map((item) => fileCount(item.file));
+  const total = knownCounts.every((count) => typeof count === "number")
+    ? knownCounts.reduce((sum, count) => sum + count, 0)
+    : null;
   return (
     <>
       <header className="top">
@@ -108,19 +157,30 @@ export default function App() {
             ))}
           </fieldset>
           <p className="version-date">Сборка от {version.date}</p>
+          <p className="download-count">
+            {countsError
+              ? "Счётчик сейчас недоступен"
+              : total === null
+                ? "Считаем скачивания…"
+                : `Скачиваний этой версии: ${total}`}
+          </p>
           <div className="downloads">
-            {downloads.map((item) => (
-              <a
-                key={item.os}
-                className="download"
-                href={archiveHref(version.id, item.file)}
-              >
-                <span className="download-os">Скачать для {item.os}</span>
-                <span className="download-meta">
-                  {item.file} · {item.size} · {item.detail}
-                </span>
-              </a>
-            ))}
+            {downloads.map((item) => {
+              const count = fileCount(item.file);
+              return (
+                <a
+                  key={item.os}
+                  className="download"
+                  href={archiveHref(version.id, item.file)}
+                >
+                  <span className="download-os">Скачать для {item.os}</span>
+                  <span className="download-meta">
+                    {item.file} · {item.size} · {item.detail}
+                    {typeof count === "number" ? ` · ${downloadPhrase(count)}` : ""}
+                  </span>
+                </a>
+              );
+            })}
           </div>
         </section>
 
