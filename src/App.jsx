@@ -5,6 +5,21 @@ const base = import.meta.env.BASE_URL;
 // Первая запись выбирается при открытии страницы. Новую версию добавляйте сверху.
 const versions = [
   {
+    id: "1.2",
+    label: "1.2",
+    date: "8 октября 2026",
+    added: [
+      "Таймер и секундомер.",
+      "Мини-игры «Судоку» и «Шашки».",
+      "Закрепление заметок.",
+      "Метроном в пианино.",
+      "Своя картинка на фон в настройках.",
+      "Отмена последнего шага в редакторах видео и звука.",
+    ],
+    macos: { file: "works-macos.zip", size: "45 МБ", detail: "works.app" },
+    windows: { file: "works-windows.zip", size: "58 МБ", detail: "works.exe" },
+  },
+  {
     id: "1.1",
     label: "1.1",
     date: "8 октября 2026",
@@ -25,13 +40,14 @@ const features = [
   ["Редактор фото", "Правка фотографий."],
   ["Редактор видео", "Ролики mp4, mov и m4v."],
   ["Редактор звука", "Правка звуковых файлов."],
-  ["Пианино", "Клавиши: пианино или гитара."],
+  ["Пианино", "Клавиши: пианино или гитара, и метроном."],
   ["Конвертер", "Фото, звук и видео в другой формат."],
-  ["Заметки", "Короткие записи на этом компьютере."],
+  ["Заметки", "Короткие записи, их можно закрепить."],
   ["Диктофон", "Голосовые заметки."],
   ["Калькулятор", "Обычные вычисления."],
+  ["Таймер", "Обратный отсчёт и секундомер."],
   ["Часы и расписание", "Дата, время и напоминания."],
-  ["Настройки", "Русский или английский, светлая или тёмная тема."],
+  ["Настройки", "Язык, тема и своя картинка на фон."],
 ];
 
 const games = [
@@ -44,6 +60,8 @@ const games = [
   "Тетрис",
   "Реверси",
   "Арканоид",
+  "Судоку",
+  "Шашки",
 ];
 
 const releaseApi = "https://api.github.com/repos/lolcema10/site/releases";
@@ -99,7 +117,8 @@ export default function App() {
   }, []);
 
   function fileCount(file) {
-    return counts?.[version.id]?.[file];
+    if (!counts) return undefined;
+    return counts[version.id]?.[file] ?? 0;
   }
 
   const knownCounts = downloads.map((item) => fileCount(item.file));
@@ -157,6 +176,16 @@ export default function App() {
             ))}
           </fieldset>
           <p className="version-date">Сборка от {version.date}</p>
+          {version.added ? (
+            <div className="changelog">
+              <h3>Что добавлено в {version.label}</h3>
+              <ul>
+                {version.added.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           <p className="download-count">
             {countsError
               ? "Счётчик сейчас недоступен"

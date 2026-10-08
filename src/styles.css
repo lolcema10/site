@@ -168,6 +168,27 @@ h2 {
   color: var(--muted);
 }
 
+.changelog {
+  margin: 0 0 16px;
+  padding: 14px 16px 6px;
+  border-radius: 16px;
+  background: var(--card);
+}
+
+.changelog h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.changelog ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.changelog li {
+  margin: 0 0 8px;
+}
+
 .download-count {
   margin: 0 0 14px;
   font-weight: 700;

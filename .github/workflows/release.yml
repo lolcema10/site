@@ -18,19 +18,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Publish v1.1
+      - name: Publish v1.2
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v1.1
-          name: works 1.1
+          tag_name: v1.2
+          name: works 1.2
           body: |
-            Сборки приложения works 1.1 со встроенной средой выполнения.
+            Сборки приложения works 1.2 со встроенной средой выполнения.
+
+            Что добавлено:
+            - таймер и секундомер
+            - мини-игры «Судоку» и «Шашки»
+            - закрепление заметок
+            - метроном в пианино
+            - своя картинка на фон в настройках
+            - отмена последнего шага в редакторах видео и звука
 
             - macOS: распакуйте архив и откройте works.app
             - Windows: распакуйте архив и запустите works.exe рядом с каталогом runtime
-
-            Версия 1.0 остаётся на странице сайта.
           files: |
-            public/downloads/1.1/works-macos.zip
-            public/downloads/1.1/works-windows.zip
+            public/downloads/1.2/works-macos.zip
+            public/downloads/1.2/works-windows.zip
           fail_on_unmatched_files: true
