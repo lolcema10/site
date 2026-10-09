@@ -109,13 +109,13 @@ export const shots = [
     },
   },
   {
-    src: "shots/mines.png",
+    src: "shots/solitaire.png",
     width: 1080,
     height: 740,
-    caption: { ru: "Сапёр", en: "Minesweeper" },
+    caption: { ru: "Косынка", en: "Solitaire" },
     alt: {
-      ru: "Окно мини-игр с полем сапёра",
-      en: "The mini-games window with a minesweeper board",
+      ru: "Окно мини-игр с партией в косынку",
+      en: "The mini-games window with a game of solitaire",
     },
   },
   {
