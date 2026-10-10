@@ -1,6 +1,29 @@
 // Первая запись выбирается при открытии страницы. Новую версию добавляйте сверху.
 export const versions = [
   {
+    id: "1.5",
+    label: "1.5",
+    date: { ru: "10 октября 2026", en: "10 October 2026" },
+    added: {
+      ru: [
+        "Голосовое управление: скажите, что открыть, или «закрой все окна».",
+        "В редакторе фото кисть «Линия» рисует прямой отрезок.",
+        "В шашках бить не обязательно. Начатый бой нужно закончить.",
+        "Кнопки таймера меняют обратный отсчёт на 1 секунду.",
+        "В текстовых полях слово удаляется целиком: на Mac это ⌘⌫, на Windows — Ctrl+Delete.",
+      ],
+      en: [
+        "Voice control: say what to open, or “close all windows”.",
+        "The photo editor’s Line brush draws a straight segment.",
+        "In checkers, a capture is optional. A capture that has started must be finished.",
+        "The timer buttons change the countdown by 1 second.",
+        "A whole word can be deleted in a text field: Command-Backspace on a Mac, Ctrl+Delete on Windows.",
+      ],
+    },
+    macos: { file: "works-macos.zip", size: { ru: "45 МБ", en: "45 MB" }, detail: "works.app" },
+    windows: { file: "works-windows.zip", size: { ru: "58 МБ", en: "58 MB" }, detail: "works.exe" },
+  },
+  {
     id: "1.4",
     label: "1.4",
     date: { ru: "8 октября 2026", en: "8 October 2026" },
@@ -133,7 +156,7 @@ export const shots = [
 const features = {
   ru: [
     ["Файлы", "Папки, поиск и закрепление фото, видео и звука."],
-    ["Редактор фото", "Правка фотографий, снимок экрана и пипетка."],
+    ["Редактор фото", "Правка фотографий, снимок экрана, пипетка и прямая линия."],
     ["Редактор видео", "Ролики mp4, mov и m4v."],
     ["Редактор звука", "Правка звуковых файлов."],
     ["Пианино", "Клавиши: пианино или гитара, и метроном."],
@@ -144,10 +167,11 @@ const features = {
     ["Таймер", "Обратный отсчёт, секундомер и будильник."],
     ["Часы и расписание", "Дата, время и напоминания."],
     ["Настройки", "Язык, тема, сигнал и своя картинка на фон."],
+    ["Голос", "Открывает заметки, калькулятор, шахматы и другие окна. Можно сказать «закрой все окна»."],
   ],
   en: [
     ["Files", "Folders, search, and pinning for photos, video, and audio."],
-    ["Photo editor", "Edit photos, take a screenshot, and pick a color."],
+    ["Photo editor", "Edit photos, take a screenshot, pick a color, and draw a straight line."],
     ["Video editor", "Clips in mp4, mov, and m4v."],
     ["Audio editor", "Edit audio files."],
     ["Piano", "Piano or guitar keys, and a metronome."],
@@ -158,6 +182,7 @@ const features = {
     ["Timer", "A countdown, a stopwatch, and an alarm."],
     ["Clock and schedule", "The date, the time, and reminders."],
     ["Settings", "Language, theme, chime, and a custom wallpaper."],
+    ["Voice", "Opens notes, the calculator, chess, and other windows. You can say “close all windows”."],
   ],
 };
 
