@@ -1,12 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { downloadPhrase, shots, ui, versions } from "./copy.js";
 
 const base = import.meta.env.BASE_URL;
 const releaseApi = "https://api.github.com/repos/lolcema10/site/releases";
 const langKey = "works-site-lang";
+const countedKey = "works-counted-versions";
 
 function archiveHref(version, file) {
   return `https://github.com/lolcema10/site/releases/download/v${version}/${file}`;
+}
+
+function pagesHref(version, file) {
+  return `${base}downloads/${version}/${file}`;
+}
+
+function storedCounted() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(countedKey) || "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((id) => versions.some((item) => item.id === id));
+  } catch {
+    return [];
+  }
 }
 
 function storedLang() {
@@ -22,6 +37,9 @@ export default function App() {
   const [versionId, setVersionId] = useState(versions[0].id);
   const [counts, setCounts] = useState(null);
   const [countsError, setCountsError] = useState(false);
+  const [counted, setCounted] = useState(storedCounted);
+  const countedRef = useRef(counted);
+  countedRef.current = counted;
   const text = ui[lang];
   const version = versions.find((item) => item.id === versionId) ?? versions[0];
   const added = version.added?.[lang];
@@ -72,6 +90,33 @@ export default function App() {
   function fileCount(file) {
     if (!counts) return undefined;
     return counts[version.id]?.[file] ?? 0;
+  }
+
+  // GitHub counts every release download. The first download of a version from
+  // this browser uses that link. Later downloads of the same version use the
+  // site copy, so the counter stays at one.
+  function onDownload(event) {
+    event.preventDefault();
+    const versionId = version.id;
+    const file = event.currentTarget.getAttribute("data-file");
+    const already = countedRef.current.includes(versionId);
+    if (!already) {
+      const next = [...countedRef.current, versionId];
+      countedRef.current = next;
+      try {
+        localStorage.setItem(countedKey, JSON.stringify(next));
+      } catch {
+        // This visit still counts once. A reload can count again.
+      }
+      setCounted(next);
+    }
+    const href = already ? pagesHref(versionId, file) : archiveHref(versionId, file);
+    const link = document.createElement("a");
+    link.href = href;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 
   const knownCounts = downloads.map((item) => fileCount(item.file));
@@ -153,7 +198,13 @@ export default function App() {
             {downloads.map((item) => {
               const count = fileCount(item.file);
               return (
-                <a key={item.os} className="download" href={archiveHref(version.id, item.file)}>
+                <a
+                  key={item.os}
+                  className="download"
+                  data-file={item.file}
+                  href={counted.includes(version.id) ? pagesHref(version.id, item.file) : archiveHref(version.id, item.file)}
+                  onClick={onDownload}
+                >
                   <span className="download-os">
                     {text.downloadFor} {item.os}
                   </span>
