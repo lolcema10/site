@@ -182,8 +182,8 @@ code {
 
 .mods {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 22px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
   margin-top: 36px;
 }
 
@@ -202,6 +202,8 @@ code {
 
 .shot {
   margin: 0;
+  height: 128px;
+  overflow: hidden;
   background: #0c0b09;
   border-bottom: 1px solid var(--line);
 }
@@ -209,7 +211,9 @@ code {
 .shot img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
 .card-body {
@@ -333,6 +337,8 @@ footer {
 footer p { margin: 0; padding: 18px 24px 28px; font-size: 14px; }
 
 @media (max-width: 900px) {
+  .mods { grid-template-columns: minmax(0, 1fr); }
+  .shot { height: 112px; }
   .bar { align-items: flex-start; flex-direction: column; }
   .hero-actions { align-items: stretch; }
   .hero-actions .btn { flex: 1 1 140px; }
